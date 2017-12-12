@@ -1,0 +1,62 @@
+{
+  "schemas": {
+    "public_schema_def": {
+      "tables": {
+        "auth_user": {
+          "columns": {
+            "first_name": {
+              "type": "first_name",
+              "cond": []
+            },
+            "last_name": {
+              "type": "last_name",
+              "cond": []
+            },
+            "email": {
+              "type": "email",
+              "cond": []
+            },
+            "password": {
+              "type": "hash"
+            }
+          },
+          "keys": [
+            "id"
+          ]
+        },
+        "resources": {
+          "columns": {
+            "first_name": {
+              "type": "first_name",
+              "cond": []
+            },
+            "last_name": {
+              "type": "last_name",
+              "cond": []
+            },
+            "phone_num": {
+              "type": "phone",
+              "cond": []
+            },
+            "latitude": {
+              "type": "latitude",
+              "cond": []
+            },
+            "longitude": {
+              "type": "longitude",
+              "cond": []
+            }
+          },
+          "keys": [
+            "id"
+          ]
+        }
+      }
+    }
+  },
+  "inheritants": {
+    "public_schema_def": [
+      "public"
+    ]
+  }
+}
