@@ -1,7 +1,9 @@
 # db-faker
 
 The faker project fakes your relational DB data based on your DB's schema(s) definitions.
-db-faker uses pre-defined data types which uses python faker. Meanwhile, it allows you to define your own methods in ```data_types.py```.
+db-faker uses pre-defined data types which uses python
+[python faker](https://pypi.python.org/pypi/Faker) module.
+Meanwhile, it allows you to define your own methods in ```data_types.py```.
 Currently, db-faker supports
 ```fake.profile(fields=None, sex=None)
 # {   'address': '03147 Wu Drive\nMatthewmouth, WV 06927',
