@@ -1,6 +1,7 @@
 # db-faker
 
 The faker project fakes your relational DB data based on your DB's schema(s) definitions.
+db-faker uses pre-defined data types which uses python faker. Meanwhile, it allows you to define your own methods in ```data_types.py```.
 Current version only supports Postgress but the best is still yet to come so stay tuned.
 
 ## Getting Started
