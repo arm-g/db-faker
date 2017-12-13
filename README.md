@@ -1,5 +1,5 @@
 # db-faker
-
+You have a private customer data in your database but cannot run tests on it. Here comes the sollution which is to fake your customer's data and use the database to run test on the same amount of data.
 The faker project fakes your relational DB data based on your DB's schema(s) definitions.
 db-faker uses pre-defined data types which uses 
 [python faker](https://pypi.python.org/pypi/Faker) module.
