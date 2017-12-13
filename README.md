@@ -2,7 +2,26 @@
 
 The faker project fakes your relational DB data based on your DB's schema(s) definitions.
 db-faker uses pre-defined data types which uses python faker. Meanwhile, it allows you to define your own methods in ```data_types.py```.
-Current version only supports Postgress but the best is still yet to come so stay tuned.
+Currently, db-faker supports
+```fake.profile(fields=None, sex=None)
+# {   'address': '03147 Wu Drive\nMatthewmouth, WV 06927',
+#     'birthdate': '1978-07-13',
+#     'blood_group': '0-',
+#     'company': 'Stanley PLC',
+#     'longitude': (Decimal('89.8079965'), Decimal('-154.729802')),
+#     'latitude': (Decimal('89.8079965'), Decimal('-154.729802')),
+#     'job': 'Chief Financial Officer',
+#     'mail': 'jacquelinedickerson@gmail.com',
+#     'name': 'David Palmer',
+#     'gender': 'male/female',
+#     'ssn': '736-81-1031',
+#     'username': 'sharonpatrick',
+#     'website': ['http://bruce.com/']}
+#     'hash': some_128bit_hash,
+#     'null_value': None}
+```
+
+This version only supports Postgress but the best is still yet to come so stay tuned.
 
 ## Getting Started
 
