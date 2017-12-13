@@ -192,10 +192,14 @@ class Pg_handler(Db_handler):
             where_condition = "=%s AND ".join(keys) + '=%s' % row
             update_query = self.__generate_update_query(schema, table,
                                                         where_condition)
-            self.cursor.execute(update_query['sql'], update_query['values'])
-            self.conn.commit()
+            try:
+                self.cursor.execute(update_query['sql'], update_query['values'])
+                self.conn.commit()
+                # in case there is a unique constrain violation just pass
+            except Exception:
+                pass
             counter += 1
-            if counter % 500 == 0:
+            if counter % 50000 == 0:
                 print_inf('Updated {} rows in the table.'.format(counter), 1)
 
         print_inf('Updated {} rows in the table.'.format(counter), 1)
