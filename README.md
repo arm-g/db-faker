@@ -4,6 +4,23 @@ The faker project fakes your relational DB data based on your DB's schema(s) def
 db-faker uses pre-defined data types which uses 
 [python faker](https://pypi.python.org/pypi/Faker) module.
 
+Note! This version only supports Postgress but the best is still yet to come so stay tuned.
+
+## Getting Started
+
+### Prerequisites
+
+* ```python 2.7.*```
+* ```pip```
+
+### Installing
+
+* ```git clone https://github.com/arm-g/db-faker.git```
+* ```pip install -r requirements.txt```
+* ```cp connection.sample.json connection.json``` and fill the conneciton params
+* ```cp schema_definition.sample.json connection.json``` and fill the schema structure
+
+
 # How set definitions for schemas.
 Let's consider this db schema.
 
@@ -34,22 +51,6 @@ Currently, db-faker supports
 #     'hash': some_128bit_hash,
 #     'null_value': None}
 ```
-
-This version only supports Postgress but the best is still yet to come so stay tuned.
-
-## Getting Started
-
-### Prerequisites
-
-* ```python 2.7.*```
-* ```pip```
-
-### Installing
-
-* ```git clone https://github.com/arm-g/db-faker.git```
-* ```pip install -r requirements.txt```
-* ```cp connection.sample.json connection.json``` and fill the conneciton params
-* ```cp schema_definition.sample.json connection.json``` and fill the schema structure
 
 ## Usage example
 
