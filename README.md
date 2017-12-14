@@ -10,8 +10,10 @@ Let's consider this db schema.
 ![alt text](https://github.com/arm-g/db-faker/blob/master/examples/schema.png)
 
 In this case we have 2 schemas which have the same structure (schema1, schema2) and schema3, schema4 which have different structures.
-Let's see how we are going to configure its `schema_definition.json`.
-![alt text](https://github.com/arm-g/db-faker/blob/master/examples/schema_definition.example.json)
+Let's see how we are going to configure its
+![schema_definition.example.json](https://github.com/arm-g/db-faker/blob/master/examples/schema_definition.example.json)
+
+You can use any json parser (online) which converts your json to user friendly (easy readable) json. FYI there is a nice tool which you can use for your future json configurations https://jsoneditoronline.org/
 
 Meanwhile, it allows you to define your own methods in ```data_types.py```.
 Currently, db-faker supports
