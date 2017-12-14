@@ -37,10 +37,9 @@ Currently, db-faker supports
 ```fake.profile(fields=None, sex=None)
 # {   'address': '03147 Wu Drive\nMatthewmouth, WV 06927',
 #     'birthdate': '1978-07-13',
-#     'blood_group': '0-',
 #     'company': 'Stanley PLC',
-#     'longitude': (Decimal('89.8079965'), Decimal('-154.729802')),
-#     'latitude': (Decimal('89.8079965'), Decimal('-154.729802')),
+#     'longitude': (Decimal('89.8079965'),
+#     'latitude':   Decimal('-154.729802')),
 #     'job': 'Chief Financial Officer',
 #     'mail': 'jacquelinedickerson@gmail.com',
 #     'name': 'David Palmer',
