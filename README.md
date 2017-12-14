@@ -3,6 +3,15 @@ You have a private customer data in your database but cannot run tests on it bec
 The faker project fakes your relational DB data based on your DB's schema(s) definitions.
 db-faker uses pre-defined data types which uses 
 [python faker](https://pypi.python.org/pypi/Faker) module.
+
+# How set definitions for schemas.
+Let's consider this db schema.
+
+![alt text](https://github.com/arm-g/db-faker/blob/master/architecture/schema.png)
+
+In this case we have 2 schemas which have the same structure (schema1, schema2) and schema3, schema4 which have different structures.
+Let's see how we are going to configure its `schema_definition.json`.
+
 Meanwhile, it allows you to define your own methods in ```data_types.py```.
 Currently, db-faker supports
 ```fake.profile(fields=None, sex=None)
