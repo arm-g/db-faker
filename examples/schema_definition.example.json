@@ -1,0 +1,80 @@
+{
+  "schemas": {
+    "schema1_def": {
+      "tables": {
+        "users": {
+          "columns": {
+            "name": {
+              "type": "first_name",
+              "cond": []
+            },
+            "last_name": {
+              "type": "last_name",
+              "cond": []
+            }
+          },
+          "keys": [
+            "id"
+          ]
+        },
+        "positions": {
+          "columns": {
+            "job_name": {
+              "type": "job",
+              "cond": []
+            }
+          },
+          "keys": [
+            "id"
+          ]
+        }
+      }
+    },
+    "schema3_def": {
+      "tables": {
+        "shops": {
+          "columns": {
+            "name": {
+              "type": "first_name",
+              "cond": []
+            },
+            "last_name": {
+              "type": "last_name",
+              "cond": []
+            }
+          },
+          "keys": [
+            "id"
+          ]
+        }
+      }
+    },
+    "schema4_def": {
+      "tables": {
+        "etc": {
+          "columns": {
+            "some_field": {
+              "type": "proper_type",
+              "cond": []
+            }
+          },
+          "keys": [
+            "id"
+          ]
+        }
+      }
+    }
+  },
+  "inheritants": {
+    "schema1_def": [
+      "schema1",
+      "schema2"
+    ],
+    "schema3_def": [
+      "schema3"
+    ],
+    "schema4_def": [
+      "schema4"
+    ]
+  }
+}
