@@ -11,7 +11,7 @@ Let's consider this db schema.
 
 In this case we have 2 schemas which have the same structure (schema1, schema2) and schema3, schema4 which have different structures.
 Let's see how we are going to configure its `schema_definition.json`.
-![alt text](https://github.com/arm-g/db-faker/blob/master/examples/schema_definition.example.png)
+![alt text](https://github.com/arm-g/db-faker/blob/master/examples/schema_definition.example.json)
 
 Meanwhile, it allows you to define your own methods in ```data_types.py```.
 Currently, db-faker supports
