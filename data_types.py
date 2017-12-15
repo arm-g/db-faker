@@ -11,7 +11,7 @@ class Data(object):
             'name': fake_profile['name'],
             'first_name': fake_profile['name'].split(' ')[0],
             'last_name': fake_profile['name'].split(' ')[1],
-            'full_name': self.faker.first_name() + self.faker.last_name(),
+            'full_name': fake_profile['name'],
             'email': fake_profile['mail'],
             'hash': self.hash(),
             'phone': self.faker.phone_number(),
