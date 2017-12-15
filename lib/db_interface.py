@@ -11,7 +11,7 @@ class Db_handler(object):
         pass
 
     @abc.abstractmethod
-    def set_data_types(self):
+    def data_inst(self):
         """Implement data types(defined by user in data_types.py) setter."""
         pass
 

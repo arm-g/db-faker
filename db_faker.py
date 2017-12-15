@@ -13,8 +13,8 @@ class Db_faker(object):
     def __init__(self):
         self.schema_definition = 'schema_definition.json'
         self.db = Pg_handler()
-        self.db.set_schemas_configs(get_json_config(self.schema_definition))
-        self.db.set_data_types(Data())
+        self.db.schemas_config = get_json_config(self.schema_definition)
+        self.db.data_inst = Data()
 
     def run(self):
         """Runing the data faking process and dependant checkings."""

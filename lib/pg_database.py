@@ -11,7 +11,7 @@ class Pg_handler(Db_handler):
         self.state_column = state_column
         self.conn = self.connect(get_json_config('connection.json'))
         self.cursor = self.conn.cursor()
-        self.data_inst, self.schemas_map, self.config = {}, {}, {}
+        self.__data_inst, self.schemas_map, self.__schemas_config = {}, {}, {}
 
     def connect(self, db_params):
         """
@@ -37,7 +37,7 @@ class Pg_handler(Db_handler):
             schemas (list): Schema names
         """
         try:
-            inheritants = self.config['inheritants']
+            inheritants = self.schemas_config['inheritants']
             schemas_list = []
             for schm_def, schemas in inheritants.items():
                 self.schemas_map = {schema: schm_def for schema in schemas}
@@ -58,7 +58,7 @@ class Pg_handler(Db_handler):
         """
         schema = self.__get_inheritee(schema)
         try:
-            return self.config['schemas'][schema]['tables'].keys()
+            return self.schemas_config['schemas'][schema]['tables'].keys()
         except Exception:
             raise Exception("""Schema "{}" wrong name. Take a look at the
                 definition.""".format(schema))
@@ -75,7 +75,7 @@ class Pg_handler(Db_handler):
         """
         try:
             schema = self.__get_inheritee(schema)
-            return self.config['schemas'][schema]['tables'][
+            return self.schemas_config['schemas'][schema]['tables'][
                 table]['columns'].keys()
         except Exception as e:
             print_err(e.message)
@@ -95,7 +95,8 @@ class Pg_handler(Db_handler):
         """
         try:
             schema = self.__get_inheritee(schema)
-            return self.config['schemas'][schema]['tables'][table]['keys']
+            return self.schemas_config['schemas'][schema]['tables'][
+                table]['keys']
         except Exception as e:
             print_err(e.message)
             raise Exception('Json structure definition is invalid.[3]')
@@ -158,8 +159,8 @@ class Pg_handler(Db_handler):
             rules (list): User defined rulles
         """
         schema = self.__get_inheritee(schema)
-        return self.config['schemas'][schema]['tables'][table]['columns'][
-            column]
+        return self.schemas_config['schemas'][schema]['tables'][
+            table]['columns'][column]
 
     def __get_inheritee(self, schema):
         """
@@ -193,13 +194,15 @@ class Pg_handler(Db_handler):
             update_query = self.__generate_update_query(schema, table,
                                                         where_condition)
             try:
-                self.cursor.execute(update_query['sql'], update_query['values'])
+                self.cursor.execute(update_query['sql'],
+                                    update_query['values'])
                 self.conn.commit()
+                counter += 1
                 # in case there is a unique constrain violation just pass
             except Exception:
                 pass
-            counter += 1
-            if counter % 50000 == 0:
+
+            if counter % 10000 == 0:
                 print_inf('Updated {} rows in the table.'.format(counter), 1)
 
         print_inf('Updated {} rows in the table.'.format(counter), 1)
@@ -305,10 +308,22 @@ class Pg_handler(Db_handler):
                     self.alter_column(schema, table, 'DROP')
         return True
 
-    def set_data_types(self, inst):
-        """User defined data types setter."""
-        self.data_inst = inst
+    @property
+    def data_inst(self):
+        """User defined data types getter."""
+        return self.__data_inst
 
-    def set_schemas_configs(self, configs):
+    @data_inst.setter
+    def data_inst(self, inst):
+        """User defined data types setter."""
+        self.__data_inst = inst
+
+    @property
+    def schemas_config(self):
         """User defined configs setter."""
-        self.config = configs
+        return self.__schemas_config
+
+    @schemas_config.setter
+    def schemas_config(self, configs):
+        """User defined configs setter."""
+        self.__schemas_config = configs
