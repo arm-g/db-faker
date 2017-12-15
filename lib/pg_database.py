@@ -2,7 +2,7 @@
 import psycopg2
 
 from lib.db_interface import Db_handler
-from utils.help import get_json_config, print_err, print_inf
+from utils.help import get_json_config, print_err, print_inf, print_warn
 
 
 class Pg_handler(Db_handler):
@@ -188,7 +188,7 @@ class Pg_handler(Db_handler):
             raise Exception('Select sql generating problem. {}'.format(
                 select_sql))
         self.cursor.execute(select_sql)
-        counter = 0
+        counter, err_counter = 0, 0
         for row in self.cursor.fetchall():
             where_condition = "=%s AND ".join(keys) + '=%s' % row
             update_query = self.__generate_update_query(schema, table,
@@ -199,11 +199,14 @@ class Pg_handler(Db_handler):
                 self.conn.commit()
                 counter += 1
                 # in case there is a unique constrain violation just pass
-            except Exception:
-                pass
+            except psycopg2.IntegrityError:
+                err_counter += 1
+                self.conn.rollback()
 
             if counter % 10000 == 0:
                 print_inf('Updated {} rows in the table.'.format(counter), 1)
+                print_warn("Script passed by {} duplicate rows".format(
+                    err_counter))
 
         print_inf('Updated {} rows in the table.'.format(counter), 1)
         return True
@@ -230,14 +233,14 @@ class Pg_handler(Db_handler):
                 rule = self.__conf_coulmn_rules(schema, table, column)
                 if rule['type'] in data_types:
                     fake_data[column] = data_types[rule['type']]
-                    fake_data[self.state_column] = True
                 else:
                     print_err("""Fake data type "{}" is not implemented
                                 yet.""".format(rule['type']))
                     return False
+            fake_data[self.state_column] = True
             set_sql = "=%s, ".join(fake_data.keys())
             set_sql += "=%s"
-            update_sql = 'BEGIN; UPDATE {}.{} SET {} WHERE {}; COMMIT;'
+            update_sql = 'UPDATE {}.{} SET {} WHERE {};'
             update_sql = update_sql.format(schema, table, set_sql, condition,)
             return {'sql': update_sql, 'values':
                     [val for _, val in fake_data.items()]}
