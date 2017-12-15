@@ -1,4 +1,6 @@
 """Pg_database is responsible for postges implmentation of db_interface."""
+from collections import OrderedDict
+
 import psycopg2
 
 from lib.db_interface import Db_handler
@@ -179,32 +181,29 @@ class Pg_handler(Db_handler):
 
     def fake_table_data(self, schema, table, conf_table_keys):
         print_inf('Processing "{}.{}" table.'.format(schema, table), 1)
-        keys = conf_table_keys
-        try:
-            select_sql = """SELECT {} FROM {}.{} WHERE {} IS FALSE""".format(
-                ", ".join(keys), schema, table, self.state_column)
-        except Exception as e:
-            print_err(e.message)
-            raise Exception('Select sql generating problem. {}'.format(
-                select_sql))
-        self.cursor.execute(select_sql)
-        counter, err_counter = 0, 0
-        for row in self.cursor.fetchall():
-            where_condition = "=%s AND ".join(keys) + '=%s' % row
-            update_query = self.__generate_update_query(schema, table,
-                                                        where_condition)
-            try:
-                self.cursor.execute(update_query['sql'],
-                                    update_query['values'])
-                self.conn.commit()
-                counter += 1
-                # in case there is a unique constrain violation just pass
-            except psycopg2.IntegrityError:
-                err_counter += 1
-                self.conn.rollback()
+        counter, err_counter, row_exist = 0, 0, True
+        while row_exist:
+            failed_update = True
+            while failed_update:
+                update_query = self.__generate_update_query(schema, table,
+                                                            conf_table_keys)
+                try:
+                    self.cursor.execute(update_query['sql'],
+                                        update_query['values'])
+                    row_exist = self.cursor.fetchone()
+                    self.conn.commit()
+                    counter += 1
+                    failed_update = False
+                    break
+                    # in case there is a unique constrain violation just pass
+                except psycopg2.IntegrityError:
+                    failed_update = True
+                    err_counter += 1
+                    self.conn.rollback()
 
             if counter % 10000 == 0:
-                print_inf('Updated {} rows in the table.'.format(counter), 1)
+                print_inf('Updated {} rows in the table.'.format(counter),
+                          1)
                 print_warn("Script passed by {} duplicate rows".format(
                     err_counter))
 
@@ -219,15 +218,24 @@ class Pg_handler(Db_handler):
                 self.fake_table_data(schema, table, conf_table_keys)
         return True
 
-    def __generate_update_query(self, schema, table, condition):
+    def __generate_update_query(self, schema, table, conf_table_keys):
         """
         Generate update sql based on condition.
 
         Returns:
             {sql, values}(dict): Query, values.
         """
+        keys = ", ".join(conf_table_keys)
         try:
-            fake_data = {}
+            select_sql = """SELECT {} FROM {}.{} WHERE {} IS FALSE LIMIT 1""".format(keys, schema, table,
+                                                    self.state_column)
+        except Exception as e:
+            print_err(e.message)
+            raise Exception('Select sql generating problem. {}'.format(
+                select_sql))
+
+        try:
+            fake_data = OrderedDict()
             data_types = self.data_inst.get_types()
             for column in self.__conf_table_columns(schema, table):
                 rule = self.__conf_coulmn_rules(schema, table, column)
@@ -240,8 +248,9 @@ class Pg_handler(Db_handler):
             fake_data[self.state_column] = True
             set_sql = "=%s, ".join(fake_data.keys())
             set_sql += "=%s"
-            update_sql = 'UPDATE {}.{} SET {} WHERE {};'
-            update_sql = update_sql.format(schema, table, set_sql, condition,)
+            update_sql = """UPDATE {}.{} SET {} WHERE {} IN ({}) RETURNING {}"""
+            update_sql = update_sql.format(schema, table, set_sql, keys,
+                                           select_sql, keys,)
             return {'sql': update_sql, 'values':
                     [val for _, val in fake_data.items()]}
         except Exception as e:
