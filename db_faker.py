@@ -30,7 +30,7 @@ class Db_faker(threading.Thread):
             print_err(e.message)
 
     def clean_up(self):
-        """Cleanup db changes after faking process If schema definition is valid."""
+        """Cleanup db changes after faking process."""
         print_warn('----- Data cleanup process has been started -----', 1)
         try:
             if self.db.conf_is_correct():
@@ -40,30 +40,22 @@ class Db_faker(threading.Thread):
             print_err(e.message)
 
 
-threads = []
+threads = {}
+
 if len(sys.argv) > 1:
+    threads_count = 1
+    if sys.argv[2] and int(sys.argv[2]) > 1:
+        threads_count = int(sys.argv[2])
     if sys.argv[1] == 'run':
-        thread1 = Db_faker('Thread_1')
-        thread2 = Db_faker('Thread_2')
-        thread3 = Db_faker('Thread_3')
-        thread4 = Db_faker('Thread_4')
-
-        thread1.start()
-        thread2.start()
-        thread3.start()
-        thread4.start()
-
-        threads.append(thread1)
-        threads.append(thread2)
-        threads.append(thread3)
-        threads.append(thread4)
-        for t in threads:
-            t.join()
-        print "Exiting Main Thread"
+        for i in range(threads_count):
+            threads[i] = Db_faker('Thread_{}'.format(i))
+            threads[i].start()
+        print_err('----- {} Threads  are running -----'.format(
+            len(threads.keys())))
     elif sys.argv[1] == 'cleanup':
         thread1 = Db_faker('Thread_1')
         thread1.clean_up()
     else:
-        print_warn('usage: ./db_faker.py "run | cleanup"')
+        print_warn('usage: ./db_faker.py "run | cleanup" int(threads_count)')
 else:
-    print_warn('usage: ./db_faker.py "run | cleanup"')
+    print_warn('usage: ./db_faker.py "run | cleanup" int(threads_count)')

@@ -31,5 +31,4 @@ class Data(object):
         return types
 
     def hash(self):
-        import random
         return random.getrandbits(128)

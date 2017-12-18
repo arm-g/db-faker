@@ -42,7 +42,8 @@ class Pg_handler(Db_handler):
             inheritants = self.schemas_config['inheritants']
             schemas_list = []
             for schm_def, schemas in inheritants.items():
-                self.schemas_map = {schema: schm_def for schema in schemas}
+                self.schemas_map.update({schema: schm_def for schema
+                                         in schemas})
                 schemas_list.extend(schemas)
             return schemas_list
         except Exception as e:
@@ -201,7 +202,7 @@ class Pg_handler(Db_handler):
                     err_counter += 1
                     self.conn.rollback()
 
-            if counter % 10000 == 0:
+            if counter % 1000 == 0:
                 print_inf('Updated {} rows in the table.'.format(counter),
                           1)
                 print_warn("Script passed by {} duplicate rows".format(
@@ -227,8 +228,8 @@ class Pg_handler(Db_handler):
         """
         keys = ", ".join(conf_table_keys)
         try:
-            select_sql = """SELECT {} FROM {}.{} WHERE {} IS FALSE LIMIT 1""".format(keys, schema, table,
-                                                    self.state_column)
+            select_sql = """SELECT {} FROM {}.{} WHERE {} IS FALSE LIMIT 1
+                FOR UPDATE""".format(keys, schema, table, self.state_column)
         except Exception as e:
             print_err(e.message)
             raise Exception('Select sql generating problem. {}'.format(
