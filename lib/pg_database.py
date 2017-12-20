@@ -203,12 +203,15 @@ class Pg_handler(Db_handler):
                     self.conn.rollback()
 
             if counter % 1000 == 0:
-                print_inf('Updated {} rows in the table.'.format(counter),
+                print_inf('Updated {} rows in {}.{}.'.format(counter, schema,
+                                                             table),
                           1)
                 print_warn("Script passed by {} duplicate rows".format(
                     err_counter))
 
-        print_inf('Updated {} rows in the table.'.format(counter), 1)
+        print_inf('Updated {} rows in {}.{}.'.format(counter, schema,
+                                                     table),
+                  1)
         return True
 
     def fake_tables_data(self):
