@@ -311,7 +311,11 @@ class Pg_handler(Db_handler):
         if not self.__column_exists(schema, table, self.state_column):
             print_inf("""New "{}" field is being added to {}.
                         Please wait....""".format(self.state_column, table))
-            self.alter_column(schema, table)
+            try:
+                self.alter_column(schema, table)
+            except Exception:
+                # in case two threads want to create the same column
+                pass
         return True
 
     def clean_up(self):
