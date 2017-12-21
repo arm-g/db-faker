@@ -303,19 +303,18 @@ class Pg_handler(Db_handler):
                                                    self.state_column,
                                                    add_case if action == 'ADD'
                                                    else '')
-        self.cursor.execute(alter_column_sql)
-        return self.conn.commit()
+        try:
+            self.cursor.execute(alter_column_sql)
+            return self.conn.commit()
+        except Exception:
+            return self.conn.rollback()
 
     def add_status_to_table(self, schema, table):
         """Add state_column if it is missing in the table."""
         if not self.__column_exists(schema, table, self.state_column):
             print_inf("""New "{}" field is being added to {}.
                         Please wait....""".format(self.state_column, table))
-            try:
-                self.alter_column(schema, table)
-            except Exception:
-                # in case two threads want to create the same column
-                pass
+            self.alter_column(schema, table)
         return True
 
     def clean_up(self):
