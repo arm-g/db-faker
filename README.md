@@ -56,7 +56,7 @@ Currently, db-faker supports
 
 ## Usage example
 
-* ```./db-faker.py run``` will check wheter the defintions are correct and will start the faking process.
+* ```./db-faker.py run threadsCount``` will check wheter the defintions are correct and will start the faking process.
 
 * ```./db-faker.py cleanup``` Cleanup db structure changes after faking process.
 
