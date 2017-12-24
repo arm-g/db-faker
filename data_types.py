@@ -1,3 +1,6 @@
+import random
+import string
+
 from faker import Faker
 
 
@@ -12,7 +15,7 @@ class Data(object):
             'first_name': fake_profile['name'].split(' ')[0],
             'last_name': fake_profile['name'].split(' ')[1],
             'full_name': fake_profile['name'],
-            'email': fake_profile['mail'],
+            'email': random.choice(string.letters) + fake_profile['mail'],
             'hash': self.hash(),
             'phone': self.faker.phone_number(),
             'gender': 'male' if fake_profile['sex'] == 'M' else 'female',
@@ -28,5 +31,4 @@ class Data(object):
         return types
 
     def hash(self):
-        import random
         return random.getrandbits(128)
