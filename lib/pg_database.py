@@ -193,7 +193,8 @@ class Pg_handler(Db_handler):
                                         update_query['values'])
                     row_exist = self.cursor.fetchone()
                     self.conn.commit()
-                    counter += 1
+                    if row_exist:
+                        counter += 1
                     failed_update = False
                     break
                     # in case there is a unique constrain violation just pass
@@ -202,20 +203,24 @@ class Pg_handler(Db_handler):
                     err_counter += 1
                     self.conn.rollback()
 
-            if counter % 1000 == 0:
+            if counter and counter % 1000 == 0:
                 print_inf('Updated {} rows in {}.{}.'.format(counter, schema,
-                                                             table),
-                          1)
+                                                             table), 1)
                 print_warn("Script passed by {} duplicate rows".format(
                     err_counter))
-
-        print_inf('Updated {} rows in {}.{}.'.format(counter, schema,
-                                                     table),
-                  1)
+        if counter:
+            print_inf('Updated {} rows in {}.{}.'.format(counter, schema,
+                                                         table), 1)
         return True
 
     def fake_tables_data(self):
-        for schema in self.__conf_schemas():
+        schemas = self.__conf_schemas()
+        length = len(schemas)
+        current_pos = 0
+        for schema in schemas:
+            current_pos += 1
+            print_warn("""Current position is {} from {}""".format(
+                current_pos, length), 1)
             for table in self.__conf_schema_tables(schema):
                 self.add_status_to_table(schema, table)
                 conf_table_keys = self.__conf_table_keys(schema, table)
