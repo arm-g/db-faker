@@ -281,22 +281,25 @@ class Pg_handler(Db_handler):
         """
         print_inf('Checking schemas correctness according to config.json')
         try:
+            error = False
             for schema in self.__conf_schemas():
                 if not self.__schema_exists(schema):
                     print_err("""Schema "{}" doesn't  exist""".format(schema))
-                    return False
+                    error = True
+
                 for table in self.__conf_schema_tables(schema):
                     if not self.__table_exists(schema, table):
                         print_err("""Table "{}" for schema "{}" doesn't
                                     exist""".format(table, schema))
-                        return False
+                        error = True
                     for column in self.__conf_table_columns(schema, table):
                         if not self.__column_exists(schema, table, column):
                             print_err("""Column "{}"  in table "{}" for schema
                                     "{}" doesn't exist""".format(column, table,
                                                                  schema))
-                            return False
-                return True
+                            error = True
+                print_inf('{} success'.format(schema))
+            return False if error else True
         except Exception as e:
             print_err(e.message)
 
