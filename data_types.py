@@ -15,7 +15,7 @@ class Data(object):
             'first_name': fake_profile['name'].split(' ')[0],
             'last_name': fake_profile['name'].split(' ')[1],
             'full_name': fake_profile['name'],
-            'email': random.choice(string.letters) + fake_profile['mail'],
+            'email': fake_profile['mail'],
             'hash': self.hash(),
             'phone': self.faker.phone_number(),
             'gender': 'male' if fake_profile['sex'] == 'M' else 'female',
@@ -26,7 +26,9 @@ class Data(object):
             'address': fake_profile['address'],
             'birth_date': fake_profile['birthdate'],
             'null_value': None,
-            'half_bool': self.faker.boolean(chance_of_getting_true=50)
+            'half_bool': self.faker.boolean(chance_of_getting_true=50),
+            'extra_emails': '{' + fake_profile['mail'] + '}',
+            'empty_json': "{}"
         }
         return types
 
